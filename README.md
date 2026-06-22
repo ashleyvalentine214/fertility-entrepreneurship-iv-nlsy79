@@ -25,8 +25,6 @@ To reproduce the analysis, obtain the required data files from the instructor or
 - `NLSCYA_TwinPair_Kinship_v1.csv`
   - NLS Children and Young Adults linked child file used to construct the approximate respondent age measure and the exploratory longitudinal childbirth-timing extension.
 
-The small `.do` value-label file may be included in the repository for transparency if permitted. The two large CSV files should be omitted from the public repository unless the instructor gives permission to share them.
-
 ## Methodology
 
 The analysis includes:
