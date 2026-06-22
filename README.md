@@ -65,7 +65,7 @@ The PDF output also requires a working LaTeX installation. The document uses com
 1. Clone the repository.
 
    ```bash
-   git clone https://github.com/your-username/fertility-entrepreneurship-iv-nlsy79.git
+   git clone https://github.com/ashleyvalentine214/fertility-entrepreneurship-iv-nlsy79.git
    cd fertility-entrepreneurship-iv-nlsy79
    ```
 
