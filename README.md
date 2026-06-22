@@ -4,7 +4,7 @@ Repository name: `fertility-entrepreneurship-iv-nlsy79`
 
 ## Project Overview
 
-This repository contains the replication files for an econometrics final project studying whether fertility affects female entrepreneurship and labor market outcomes. The paper uses the National Longitudinal Survey of Youth 1979 (NLSY79) and uses twin/triplet births as an instrument for fertility. The main outcome is self-employment in 2022, with employment and wage income examined as additional labor market outcomes.
+This repository contains the final report PDF and R Markdown file for an econometrics final project studying whether fertility affects female entrepreneurship and labor market outcomes. The paper uses the National Longitudinal Survey of Youth 1979 (NLSY79) and uses twin/triplet births as an instrument for fertility. The main outcome is self-employment in 2022, with employment and wage income examined as additional labor market outcomes.
 
 The project asks:
 
@@ -12,7 +12,9 @@ The project asks:
 
 ## Data
 
-Place the following files in the `data/` folder before knitting the R Markdown file.
+The two large CSV data files are not included in the public GitHub repository because they were provided separately by the instructor for this project, are too large for normal GitHub upload, and should not be publicly redistributed without explicit permission.
+
+To reproduce the analysis, obtain the required data files from the instructor or original NLSY source and place them in the `data/` folder before knitting the R Markdown file. The Rmd expects the following exact file names:
 
 - `NLSY79_TwinIV_Mother_Entrep_v1.csv`
   - Main NLSY79 respondent-level extract used to construct fertility, twin/triplet births, class-of-worker/self-employment, employment, income, education, parental education, marital status, and race variables.
@@ -23,7 +25,7 @@ Place the following files in the `data/` folder before knitting the R Markdown f
 - `NLSCYA_TwinPair_Kinship_v1.csv`
   - NLS Children and Young Adults linked child file used to construct the approximate respondent age measure and the exploratory longitudinal childbirth-timing extension.
 
-The data files come from NLSY extracts. If the data cannot be publicly redistributed, users should obtain the same extracts from NLS Investigator and place the files in the `data/` folder using the file names above.
+The small `.do` value-label file may be included in the repository for transparency if permitted. The two large CSV files should be omitted from the public repository unless the instructor gives permission to share them.
 
 ## Methodology
 
@@ -40,13 +42,13 @@ The analysis includes:
 
 ```text
 fertility-entrepreneurship-iv-nlsy79/
-├── README.md
-├── ECI_Final_Research_Project_Ashley.Rmd
-├── ECI_Final_Research_Project_Ashley.pdf
-└── data/
-    ├── NLSY79_TwinIV_Mother_Entrep_v1.csv
-    ├── NLSY79_TwinIV_Mother_Entrep_v1-value-labels.do
-    └── NLSCYA_TwinPair_Kinship_v1.csv
+|-- README.md
+|-- ECI_Final_Research_Project_Ashley.Rmd
+|-- ECI_Final_Research_Project_Ashley.pdf
+`-- data/
+    |-- NLSY79_TwinIV_Mother_Entrep_v1-value-labels.do
+    |-- NLSY79_TwinIV_Mother_Entrep_v1.csv              # not included publicly
+    `-- NLSCYA_TwinPair_Kinship_v1.csv                  # not included publicly
 ```
 
 ## Software Requirements
@@ -69,7 +71,7 @@ The PDF output also requires a working LaTeX installation. The document uses com
    cd fertility-entrepreneurship-iv-nlsy79
    ```
 
-2. Place the three required data files in the `data/` folder.
+2. Obtain the required data files from the instructor or original NLSY source and place them in the `data/` folder using the exact file names listed above.
 
 3. Open `ECI_Final_Research_Project_Ashley.Rmd` in RStudio.
 
