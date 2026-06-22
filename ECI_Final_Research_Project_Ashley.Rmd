@@ -1,0 +1,1614 @@
+---
+title: "Fertility and Female Entrepreneurship: Evidence from an Instrumental Variables Approach Using Twin Births in the NLSY79"
+subtitle: "Experiments and Causal Inference Spring 2026"
+author: "Ashley Valentine Wijaya (111006421)"
+output:
+  pdf_document:
+    toc: false
+    number_sections: false
+fontsize: 11pt
+geometry: margin=0.85in
+header-includes:
+  - \usepackage{setspace}
+  - \doublespacing
+  - \usepackage{booktabs}
+  - \usepackage{makecell}
+  - \usepackage{etoolbox}
+  - \usepackage{needspace}
+  - \usepackage{float}
+  - \AtBeginEnvironment{tabular}{\singlespacing\normalsize}
+  - \AtBeginDocument{\setlength{\parskip}{0pt}\setlength{\parindent}{1.5em}}
+  - \AtBeginDocument{\setlength{\abovedisplayskip}{6pt}\setlength{\belowdisplayskip}{6pt}\setlength{\abovedisplayshortskip}{4pt}\setlength{\belowdisplayshortskip}{4pt}}
+  - '\newcommand{\compacteq}[1]{\par\begingroup\setstretch{1}\vspace{0.45\baselineskip}\noindent\makebox[\linewidth][c]{$\displaystyle #1$}\par\vspace{0.45\baselineskip}\endgroup}'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+
+options(knitr.table.format = "latex")
+
+```
+
+# 1. Introduction
+
+The relationship between fertility and women's labor market outcomes has been a central topic in labor and family economics. Having children may affect women's employment decisions, earnings, and career trajectories through increased caregiving responsibilities and time constraints. At the same time, fertility choices are not random, making it difficult to distinguish causal effects from simple correlations.
+
+To address this challenge, this paper uses twin and triplet births as an instrumental variable for fertility. Multiple births provide plausibly exogenous variation in family size and have been widely used in the economics literature to identify causal effects of fertility on labor market outcomes.
+
+Using panel data from the National Longitudinal Survey of Youth 1979 (NLSY79), this study contributes by examining whether fertility affects female self-employment, employment, and earnings. In addition to estimating average effects, the analysis explores whether the relationship between fertility and self-employment differs across educational attainment groups.
+
+Specifically, this paper addresses the following research question:
+
+> Does fertility affect female entrepreneurship and labor market outcomes, using twin births as an instrument for fertility?
+
+The primary outcome of interest is self-employment in 2022. Employment status and earnings are examined as additional labor market outcomes. Fertility is measured as the number of children recorded in the 2022 fertility roster. The instrumental variable is an indicator for whether a respondent ever experienced a twin or triplet birth recorded in the fertility roster. A broader self-employment and family-business measure is also constructed as a robustness check.
+
+
+# 2. Literature Review
+
+A large literature studies the economic consequences of fertility. Rosenzweig and Wolpin (1980) were among the first studies to use twin births as a natural experiment for fertility. Because twin births generate unexpected variation in family size, they provide a source of plausibly exogenous variation that can be used to estimate the causal effect of fertility on economic outcomes.
+
+Angrist and Evans (1998) introduced an alternative instrumental variable strategy based on the sex composition of the first two children. Their results suggested that additional children reduce female labor supply, although the estimated effects were smaller than simple correlations would imply. These findings highlighted the importance of accounting for fertility endogeneity when studying labor market outcomes.
+
+More recent studies generally find that instrumental variable estimates are smaller than corresponding OLS estimates. This pattern suggests that women who choose to have larger families may differ systematically from women who have fewer children, leading OLS estimates to capture both causal effects and selection effects. Although many fertility studies find smaller IV estimates than OLS estimates, the direction of the bias is ultimately an empirical question and may vary across outcomes and settings.
+
+Several mechanisms may link fertility and entrepreneurship. Additional children may reduce labor market participation due to childcare responsibilities and increased time constraints. However, fertility may also increase the value of flexible work arrangements. Self-employment often provides greater control over working hours and work location, making entrepreneurship a potentially attractive alternative for some mothers. Prior research suggests that mothers may value the flexibility offered by self-employment, particularly when balancing childcare and work responsibilities (Wellington, 2006). These considerations may be especially relevant for highly educated women, who often have stronger labor market attachment and higher opportunity costs of leaving the workforce.
+
+While some studies suggest that self-employment may provide mothers with greater flexibility to balance work and family responsibilities, others argue that entrepreneurship may become more difficult after childbirth because of increased financial and time constraints. As a result, the theoretical effect of fertility on entrepreneurship is ambiguous and remains an empirical question.
+
+Previous research generally finds that fertility reduces women's labor market participation and earnings, although estimated magnitudes vary across countries, institutional settings, and identification strategies. This distinction between correlation and causation motivates the instrumental variable approach used in this paper.
+
+While much of the literature focuses on labor supply and earnings outcomes, less attention has been given to self-employment as a possible margin of adjustment. This paper therefore examines whether fertility affects women's self-employment, employment, and earnings.
+
+
+# 3. Hypotheses
+
+Based on the existing literature and the theoretical mechanisms discussed above, the following substantive hypotheses are examined.
+
+### H1 (Entrepreneurship)
+
+*Fertility may affect the probability of female self-employment.*
+
+The direction of this relationship is theoretically ambiguous. Additional children may reduce labor market participation because of increased childcare responsibilities. However, self-employment may also become more attractive because it offers greater flexibility in work schedules and location.
+
+### H2 (Employment)
+
+*Fertility may affect women's employment outcomes.*
+
+Higher fertility may reduce labor supply because mothers face greater time constraints and caregiving responsibilities. As a result, women with more children may be less likely to participate in paid employment.
+
+### H3 (Earnings)
+
+*Fertility may affect women's labor earnings.*
+
+Additional children may reduce accumulated work experience, limit working hours, or increase career interruptions, potentially lowering earnings. However, the magnitude of this relationship is ultimately an empirical question.
+
+### H4 (Education Heterogeneity)
+
+*The relationship between fertility and self-employment may differ by educational attainment.*
+
+Highly educated women often have stronger labor market attachment and higher opportunity costs of leaving the workforce. Consequently, self-employment may provide a particularly attractive way to balance family responsibilities and continued labor market participation. Therefore, the effect of fertility on self-employment may differ between women with higher and lower levels of education.
+
+These hypotheses are evaluated using instrumental variable methods that exploit variation in fertility generated by twin and triplet births. The next section describes the data, variable construction, and empirical methodology used to test these hypotheses.
+
+
+# 4. Data and Variable Construction
+
+The analysis uses 1979-2022 panel data from NLSY79 and its supplemental fertility files. The NLSY79 is a longitudinal survey that follows a nationally representative cohort of individuals who were aged 14-22 when first interviewed in 1979 over several decades, making it well suited for studying the long-run relationship between fertility and labor market outcomes. Because this study focuses on female entrepreneurship and labor market behavior, the sample is restricted to female respondents.
+
+Fertility is measured as the number of occupied child-roster slots observed in the 2022 supplemental fertility roster. A child is counted when a roster position contains a valid sex code. Although this measure is constructed from roster information rather than a direct completed-fertility variable, it provides a reasonable proxy for fertility within the preferred baseline IV sample. Checks against linked child records indicate that this baseline sample is not affected by the non-observed roster-value issue discussed later, although the broader larger-sample robustness check is more sensitive to this construction choice.
+
+The instrumental variable is an indicator for whether a respondent ever experienced a twin or triplet birth recorded in the fertility roster. Because multiple births create an unexpected increase in family size, they provide a source of plausibly exogenous variation in fertility.
+
+The primary outcome variable is self-employment in 2022, defined using class-of-worker information. Employment status and earnings are examined as additional labor market outcomes. 
+
+Control variables $X_i$ include educational attainment, parental education, marital status, race, and an approximate age measure constructed using the NLS Children and Young Adults dataset. Because a direct age measure was not available for all respondents in 2022, an approximate age variable was constructed using age information from earlier survey waves. Specifically, observed ages from previous waves were adjusted by the number of years between the survey year and 2022 to obtain an approximate age in 2022.
+
+Because the NLSY79 respondents are observed later in life, the 2022 outcomes should be interpreted as late-career labor market outcomes rather than measures of entrepreneurship earlier in adulthood. 
+
+For the education heterogeneity analysis, BA+ is defined using the highest grade ever completed variable. Respondents are classified as BA+ if they report completing four or more years of college (`educ >= 16`), while non-BA respondents are those with fewer than four years of college. This should be interpreted as a proxy for bachelor's degree attainment rather than a direct degree measure.
+
+Detailed variable definitions and units are provided in Appendix Table A1.
+
+
+```{r load-data}
+# Load Data 
+
+data_path <- "data/NLSY79_TwinIV_Mother_Entrep_v1.csv"
+rename_path <- "data/NLSY79_TwinIV_Mother_Entrep_v1-value-labels.do"
+cya_path <- "data/NLSCYA_TwinPair_Kinship_v1.csv"
+
+if (!file.exists(data_path)) stop("Data file not found: ", data_path)
+if (!file.exists(rename_path)) stop("Rename/value-label file not found: ", rename_path)
+if (!file.exists(cya_path)) stop("NLSCYA file not found: ", cya_path)
+
+df <- read.csv(data_path, check.names = FALSE)
+
+read_selected_csv <- function(path, keep_vars) {
+  header <- names(read.csv(path, nrows = 0, check.names = FALSE))
+  col_classes <- ifelse(header %in% keep_vars, NA, "NULL")
+  read.csv(path, check.names = FALSE, colClasses = col_classes)
+}
+
+cya_age_vars <- c(
+  "C0000200",  # MPUBID_XRND: ID code of NLSY79 mother
+  "C0005700",  # CYRB: child's birth year
+  "C0038240", # AGEMOM2006
+  "C3602200", # AGEMOM2008
+  "C3982200", # AGEMOM2010
+  "C5526000", # AGEMOM2012
+  "C5802300", # AGEMOM2014
+  "C6051501", # AGEMOM2016
+  "C6120600"  # AGEMOM2018
+)
+
+cya_age <- read_selected_csv(cya_path, cya_age_vars)
+```
+
+
+
+```{r helpers}
+# Helper Functions 
+
+to_na <- function(x) {
+  x <- suppressWarnings(as.numeric(x))
+  x[x < 0] <- NA
+  x
+}
+
+has_any <- function(dat, vars, values) {
+  vars <- intersect(vars, names(dat))
+  if (length(vars) == 0) stop("None of these variables were found: ", paste(vars, collapse = ", "))
+  m <- as.data.frame(lapply(dat[vars], function(x) suppressWarnings(as.numeric(x)) %in% values))
+  as.integer(rowSums(m, na.rm = TRUE) > 0)
+}
+
+extract_renamed_vars <- function(rename_file, pattern) {
+  lines <- readLines(rename_file, warn = FALSE)
+  hits <- grep(pattern, lines, value = TRUE)
+  sub(".*rename ([A-Z][0-9]+).*", "\\1", hits)
+}
+
+extract_renamed_year_vars <- function(rename_file, pattern) {
+  lines <- readLines(rename_file, warn = FALSE)
+  hits <- grep(pattern, lines, value = TRUE)
+
+  data.frame(
+    var = sub(".*rename ([A-Z][0-9]+).*", "\\1", hits),
+    year = as.integer(sub(".*_([0-9]{4}).*", "\\1", hits)),
+    stringsAsFactors = FALSE
+  )
+}
+
+ols_hc1 <- function(formula, data) {
+  fit <- lm(formula, data = data)
+  X <- model.matrix(fit)
+  u <- resid(fit)
+  n <- nrow(X)
+  k <- ncol(X)
+  bread <- solve(crossprod(X))
+  meat <- crossprod(X, X * as.vector(u^2))
+  vcov_hc1 <- (n / (n - k)) * bread %*% meat %*% bread
+  se <- sqrt(diag(vcov_hc1))
+  out <- data.frame(
+    term = names(coef(fit)),
+    estimate = coef(fit),
+    robust_se = se,
+    t = coef(fit) / se,
+    p = 2 * pt(abs(coef(fit) / se), df = n - k, lower.tail = FALSE),
+    row.names = NULL
+  )
+  list(fit = fit, table = out)
+}
+
+iv_2sls_hc1 <- function(y, x_endog, z_inst, controls, data) {
+  vars <- c(y, x_endog, z_inst, controls)
+  dat <- na.omit(data[vars])
+
+  yv <- as.matrix(dat[[y]])
+  X <- model.matrix(as.formula(paste("~", paste(c(x_endog, controls), collapse = " + "))), data = dat)
+  Z <- model.matrix(as.formula(paste("~", paste(c(z_inst, controls), collapse = " + "))), data = dat)
+
+  Pz <- Z %*% solve(crossprod(Z)) %*% t(Z)
+  beta <- solve(t(X) %*% Pz %*% X) %*% t(X) %*% Pz %*% yv
+  rownames(beta) <- colnames(X)
+
+  u <- as.vector(yv - X %*% beta)
+  n <- nrow(X)
+  k <- ncol(X)
+  A <- solve(t(X) %*% Pz %*% X)
+  middle <- t(X) %*% Pz %*% diag(u^2, nrow = n) %*% Pz %*% X
+  vcov_hc1 <- (n / (n - k)) * A %*% middle %*% A
+  se <- sqrt(diag(vcov_hc1))
+
+  out <- data.frame(
+    term = rownames(beta),
+    estimate = as.numeric(beta),
+    robust_se = se,
+    t = as.numeric(beta) / se,
+    p = 2 * pt(abs(as.numeric(beta) / se), df = n - k, lower.tail = FALSE),
+    row.names = NULL
+  )
+
+  list(n = n, table = out)
+}
+
+stars_for_p <- function(p) {
+  ifelse(
+    p < 0.01, "***",
+    ifelse(p < 0.05, "**",
+           ifelse(p < 0.10, "*", ""))
+  )
+}
+
+format_coef <- function(est, p = NULL, digits = 4) {
+  digits <- rep(digits, length.out = length(est))
+  coefs <- mapply(
+    function(e, d) sprintf(paste0("%.", d, "f"), e),
+    as.numeric(est),
+    digits,
+    USE.NAMES = FALSE
+  )
+
+  if (!is.null(p)) {
+    coefs <- paste0(coefs, stars_for_p(p))
+  }
+
+  coefs
+}
+
+format_se <- function(se, digits = 4) {
+  digits <- rep(digits, length.out = length(se))
+  mapply(
+    function(s, d) sprintf(paste0("(%.", d, "f)"), s),
+    as.numeric(se),
+    digits,
+    USE.NAMES = FALSE
+  )
+}
+
+coef_se_cell <- function(est, se, p = NULL, digits = 4) {
+  paste0(
+    "\\makecell{",
+    format_coef(est, p, digits),
+    "\\\\",
+    format_se(se, digits),
+    "}"
+  )
+}
+
+paper_table <- function(x, caption, align = NULL, escape = TRUE) {
+  knitr::kable(
+    x,
+    format = "latex",
+    caption = caption,
+    booktabs = TRUE,
+    align = align,
+    escape = escape,
+    position = "H"
+  )
+}
+
+display_labels <- c(
+  children_2022 = "Children",
+  twin_ever = "Twin/Triplet Birth",
+  self_emp_strict_2022 = "Self-Employment",
+  self_emp_family_2022 = "Self-Employment or Family Business",
+  worked_2022 = "Worked",
+  wage_income_2022 = "Wage Income",
+  educ = "Education",
+  mother_educ = "Mother's Education",
+  father_educ = "Father's Education",
+  age_2022_est = "Age",
+  married_2022 = "Married",
+  race = "Race/Ethnicity",
+  race_hispanic = "Hispanic",
+  race_black = "Black",
+  race_nonblack_nonhispanic = "Non-Black/Non-Hispanic",
+  `race = 1` = "Hispanic",
+  `race = 2` = "Black",
+  `race = 3` = "Non-Black/Non-Hispanic"
+)
+
+label_variable <- function(x) {
+  out <- unname(display_labels[as.character(x)])
+  ifelse(is.na(out), as.character(x), out)
+}
+```
+
+
+
+```{r construct-vars}
+# Construct Analysis Variables
+
+child_vars <- c(
+  "T9302700", "T9303200", "T9303700", "T9304200", "T9304700", "T9305200",
+  "T9305700", "T9306200", "T9306600", "T9307100", "T9307500"
+)
+
+cow_2022_vars <- c("T8982900", "T8983000", "T8983100", "T8983200", "T8983300")
+
+twin_vars <- extract_renamed_vars(rename_path, "rename [A-Z][0-9]+ Q9_29J")
+twin_vars <- intersect(twin_vars, names(df))
+
+age_adjustments <- c(
+  C0038240 = 16, # 2006 age + 16 = approximate 2022 age
+  C3602200 = 14, # 2008 age + 14
+  C3982200 = 12, # 2010 age + 12
+  C5526000 = 10, # 2012 age + 10
+  C5802300 = 8,  # 2014 age + 8
+  C6051501 = 6,  # 2016 age + 6
+  C6120600 = 4   # 2018 age + 4
+)
+
+cya_age$mother_id <- to_na(cya_age$C0000200)
+
+age_estimates <- as.data.frame(lapply(names(age_adjustments), function(v) {
+  to_na(cya_age[[v]]) + age_adjustments[[v]]
+}))
+names(age_estimates) <- paste0(names(age_adjustments), "_age2022")
+
+cya_age$age_2022_est <- apply(age_estimates, 1, function(x) {
+  x <- x[!is.na(x)]
+  if (length(x) == 0) return(NA_real_)
+  x[length(x)]
+})
+
+mother_age_bridge <- aggregate(
+  age_2022_est ~ mother_id,
+  data = cya_age,
+  FUN = function(x) mean(unique(x), na.rm = TRUE)
+)
+
+linked_child_counts <- aggregate(
+  to_na(cya_age$C0005700),
+  by = list(mother_id = cya_age$mother_id),
+  FUN = function(x) sum(!is.na(x))
+)
+names(linked_child_counts)[2] <- "linked_child_count"
+
+first_child_bridge <- aggregate(
+  to_na(cya_age$C0005700),
+  by = list(mother_id = cya_age$mother_id),
+  FUN = function(x) min(x, na.rm = TRUE)
+)
+names(first_child_bridge)[2] <- "first_child_year"
+first_child_bridge$first_child_year[!is.finite(first_child_bridge$first_child_year)] <- NA
+
+analysis <- data.frame(
+  id = df$R0000100,
+  female = suppressWarnings(as.numeric(df$R0214800)) == 2,
+  race = factor(to_na(df$R0214700)),
+  mother_educ = to_na(df$R0006500),
+  father_educ = to_na(df$R0007900),
+  educ = to_na(df$T9900000),
+  married_2022 = to_na(df$T9300200) == 2,
+  wage_income_2022 = to_na(df$T9198400),
+  weeks_worked_2022 = to_na(df$T9301000)
+)
+
+analysis <- merge(
+  analysis,
+  mother_age_bridge,
+  by.x = "id",
+  by.y = "mother_id",
+  all.x = TRUE
+)
+
+analysis <- merge(
+  analysis,
+  linked_child_counts,
+  by.x = "id",
+  by.y = "mother_id",
+  all.x = TRUE
+)
+
+analysis <- merge(
+  analysis,
+  first_child_bridge,
+  by.x = "id",
+  by.y = "mother_id",
+  all.x = TRUE
+)
+
+child_matrix <- as.data.frame(lapply(df[child_vars], function(x) {
+  suppressWarnings(as.numeric(x)) %in% c(1, 2)
+}))
+
+analysis$children_2022 <- rowSums(child_matrix, na.rm = TRUE)
+analysis$linked_child_count[is.na(analysis$linked_child_count)] <- 0
+analysis$child_roster_all_minus5 <- rowSums(
+  as.data.frame(lapply(df[child_vars], function(x) suppressWarnings(as.numeric(x)) == -5)),
+  na.rm = TRUE
+) == length(child_vars)
+analysis$has_child <- as.integer(analysis$children_2022 >= 1)
+analysis$has_2plus_children <- as.integer(analysis$children_2022 >= 2)
+
+analysis$twin_ever <- has_any(df, twin_vars, c(1, 2))
+analysis$self_emp_strict_2022 <- has_any(df, cow_2022_vars, c(4))
+analysis$self_emp_family_2022 <- has_any(df, cow_2022_vars, c(4, 5))
+analysis$worked_2022 <- as.integer(!is.na(analysis$weeks_worked_2022) & analysis$weeks_worked_2022 > 0)
+analysis$ba_plus <- as.integer(!is.na(analysis$educ) & analysis$educ >= 16 & analysis$educ < 90)
+
+women <- subset(analysis, female)
+women_count <- nrow(women)
+
+summary_table <- data.frame(
+  Variable = c(
+    "Female respondents",
+    "BA+ women",
+    "Non-BA women",
+    "Women with >= 1 child",
+    "Women with >= 2 children",
+    "Ever twin/triplet",
+    "Nonmissing approximate age in 2022",
+    "Strict self-employed 2022",
+    "Self-employed or family business 2022",
+    "Worked in 2022",
+    "Nonmissing wage income 2022"
+  ),
+  N = c(
+    women_count,
+    sum(women$ba_plus == 1, na.rm = TRUE),
+    women_count - sum(women$ba_plus == 1, na.rm = TRUE),
+    sum(women$has_child == 1, na.rm = TRUE),
+    sum(women$has_2plus_children == 1, na.rm = TRUE),
+    sum(women$twin_ever == 1, na.rm = TRUE),
+    sum(!is.na(women$age_2022_est)),
+    sum(women$self_emp_strict_2022 == 1, na.rm = TRUE),
+    sum(women$self_emp_family_2022 == 1, na.rm = TRUE),
+    sum(women$worked_2022 == 1, na.rm = TRUE),
+    sum(!is.na(women$wage_income_2022))
+  )
+)
+
+paper_table(
+  summary_table,
+  caption = "Sample Summary Statistics"
+)
+```
+Only `r sum(women$twin_ever == 1, na.rm = TRUE)` women (approximately `r sprintf("%.1f", 100 * mean(women$twin_ever == 1, na.rm = TRUE))`% of the sample) experienced a recorded twin or triplet birth, illustrating why IV estimates may be relatively imprecise despite the large overall sample.
+
+# 5. Empirical Methodology and Main Results
+
+## 5.1 First Stage
+
+The first-stage regression examines whether twin or triplet births increase fertility.
+
+\compacteq{Children_i = \alpha + \pi Twin_i + X_i'\gamma + u_i}
+
+where ($Children_i$) is the number of children recorded in the 2022 fertility roster, ($Twin_i$) is an indicator for whether the respondent experienced a twin or triplet birth, and ($X_i$) is a vector of control variables including age, education, parental education, marital status, and race.
+
+The coefficient ($\pi$) measures the effect of twin/triplet births on fertility. A strong and statistically significant first-stage relationship is required for the instrumental variable strategy to be valid.
+
+```{r first-stage}
+controls <- c("age_2022_est", "educ", "mother_educ", "father_educ", "married_2022", "race")
+
+first_stage <- ols_hc1(
+  children_2022 ~ twin_ever + age_2022_est + educ + mother_educ + father_educ + married_2022 + race,
+  data = women
+)
+
+first_stage_twin_coef <- first_stage$table$estimate[first_stage$table$term == "twin_ever"]
+first_stage_twin_tstat <- first_stage$table$t[first_stage$table$term == "twin_ever"]
+first_stage_f <- first_stage_twin_tstat^2
+
+first_stage_pretty <- first_stage$table[
+  first_stage$table$term %in% c(
+    "twin_ever",
+    "age_2022_est",
+    "educ",
+    "mother_educ",
+    "father_educ",
+    "married_2022TRUE"
+  ),
+]
+
+first_stage_pretty$Variable <- c(
+  "Twin/Triplet Birth",
+  "Age",
+  "Education",
+  "Mother's Education",
+  "Father's Education",
+  "Married"
+)
+
+first_stage_pretty <- data.frame(
+  Variable = first_stage_pretty$Variable,
+  Estimate = coef_se_cell(
+    first_stage_pretty$estimate,
+    first_stage_pretty$robust_se,
+    first_stage_pretty$p,
+    3
+  ),
+  `p-value` = sprintf("%.3f", first_stage_pretty$p),
+  check.names = FALSE
+)
+
+paper_table(
+  first_stage_pretty,
+  caption = "First-Stage Regression: Fertility on Twin/Triplet Birth Instrument",
+  escape = FALSE
+)
+```
+Notes: Robust (HC1) standard errors are reported in parentheses.
+Robust first-stage relevance statistic for the excluded instrument (HC1 t-statistic squared) = `r round(first_stage_f, 2)`.
+
+The first-stage results indicate that the twin/triplet birth instrument strongly predicts fertility. The estimated coefficient on the twin indicator is positive and highly statistically significant, implying that women who experienced a twin or triplet birth have approximately `r sprintf("%.2f", first_stage_twin_coef)` more children on average than otherwise similar women. This finding supports the relevance condition required for instrumental variable estimation. In addition, the robust first-stage relevance statistic is `r round(first_stage_f, 2)`, which exceeds the conventional threshold of 10 commonly used in the instrumental variables literature, suggesting that weak-instrument concerns are limited. Together, these results suggest that the instrument provides meaningful variation in fertility.
+
+
+## 5.2 Instrument Validity
+
+The validity of the instrumental variable strategy relies on several assumptions.
+
+First, the relevance condition requires that the instrument be correlated with fertility. This condition appears to be satisfied in the data. The estimated coefficient on twin/triplet birth is positive and statistically significant. This strong first-stage relationship provides evidence supporting the relevance condition.
+
+Second, the independence assumption requires that twin births be unrelated to unobserved determinants of labor market outcomes. Multiple births are often treated as plausibly exogenous conditional on observed controls because they generate an unexpected increase in family size. However, this assumption may be imperfect if the probability of multiple births is correlated with maternal age, fertility treatment, or other characteristics related to labor market outcomes. One common criticism of twin-birth instruments is that the probability of multiple births increases with maternal age. If maternal age is also related to labor market outcomes, the independence assumption may be imperfect. This concern motivates alternative fertility instruments such as the sex composition of earlier children used in parts of the fertility literature. In the baseline specification, approximate age is included as a control variable to partially address this concern.
+
+Third, the exclusion restriction requires that twin births affect labor market outcomes only through their effect on fertility. A potential concern is that raising twins may impose additional childcare burdens beyond the effect of having an additional child. Despite this concern, the twin-birth instrument has been widely used in the fertility literature and remains a standard approach for estimating the causal effects of fertility.
+
+Although these assumptions cannot be tested directly, the strong first-stage relationship and consistency with the existing literature provide support for the instrumental variable strategy used in this paper.
+
+It is also important to note that the instrumental variable approach does not estimate the effect of fertility for all women. Instead, the IV estimate should be interpreted as a Local Average Treatment Effect (LATE). Intuitively, some women would have had the same number of children regardless of whether they experienced a twin or triplet birth. These women do not provide the identifying variation for the IV estimate. Other women ended up with an additional child because a pregnancy resulted in twins or triplets. The IV estimate is identified from this latter group: women whose family size changed because of the instrument. Therefore, the IV estimates should be interpreted as the effect of fertility for women whose fertility was affected by twin or triplet births, not necessarily for all women in the population.
+
+
+## 5.3 OLS and IV (2SLS) Baseline
+
+To estimate the relationship between fertility and labor market outcomes, this study first reports ordinary least squares (OLS) estimates and then compares them with instrumental variable (IV) estimates.
+
+The IV specification treats fertility, measured by the number of children, as the endogenous variable and uses twin/triplet births as an instrument. All specifications control for age, educational attainment, parental education, marital status, and race.
+
+The baseline OLS specification is:
+
+\compacteq{Y_i = \alpha + \beta Children_i + X_i'\gamma + \varepsilon_i}
+
+where ($Y_i$) represents one of the labor market outcomes: self-employment, employment, or earnings.
+
+The first-stage IV specification is:
+
+\compacteq{Children_i = \alpha + \pi Twin_i + X_i'\gamma + u_i}
+
+The predicted fertility measure obtained from this first-stage regression, $(\widehat{Children}_i)$, is then used in the second-stage IV regression:
+
+\compacteq{Y_i = \alpha + \beta \widehat{Children}_i + X_i'\gamma + \varepsilon_i}
+
+where ($\widehat{Children}_i$) is the predicted number of children obtained from the first-stage regression. Under the instrumental variable assumptions, ($\beta$) can be interpreted as the causal effect of fertility on the outcome.
+
+Intuitively, the first stage isolates the part of fertility that is explained by twin or triplet births. The second stage then asks whether labor market outcomes change when fertility changes for this reason. This helps address fertility endogeneity because the analysis is not relying only on women's chosen family size, which may be related to preferences, career goals, or family background.
+
+There is an important trade-off between OLS and IV. OLS uses all observed variation in fertility, so it is usually more precise and has smaller standard errors. However, OLS may be biased if women with more children differ from women with fewer children in unobserved ways. IV uses only the variation in fertility generated by twin or triplet births, which is more credible for causal interpretation under the IV assumptions. The cost is that IV uses less identifying variation, so the estimates are less precise and have larger standard errors.
+
+```{r ols-baseline}
+# OLS Baseline 
+ols_self_emp <- ols_hc1(
+  self_emp_strict_2022 ~ children_2022 + educ + mother_educ + father_educ + married_2022 + race,
+  data = women
+)
+
+ols_worked <- ols_hc1(
+  worked_2022 ~ children_2022 + educ + mother_educ + father_educ + married_2022 + race,
+  data = women
+)
+
+ols_earnings <- ols_hc1(
+  wage_income_2022 ~ children_2022 + educ + mother_educ + father_educ + married_2022 + race,
+  data = women
+)
+```
+
+
+```{r iv-baseline}
+# IV (2SLS Baseline)
+iv_self_emp <- iv_2sls_hc1(
+  y = "self_emp_strict_2022",
+  x_endog = "children_2022",
+  z_inst = "twin_ever",
+  controls = controls,
+  data = women
+)
+
+iv_worked <- iv_2sls_hc1(
+  y = "worked_2022",
+  x_endog = "children_2022",
+  z_inst = "twin_ever",
+  controls = controls,
+  data = women
+)
+
+iv_earnings <- iv_2sls_hc1(
+  y = "wage_income_2022",
+  x_endog = "children_2022",
+  z_inst = "twin_ever",
+  controls = controls,
+  data = women
+)
+
+outcomes <- c("Self-employment", "Employment", "Earnings")
+coef_digits <- c(4, 4, 2)
+
+ols_est <- c(
+  ols_self_emp$table$estimate[ols_self_emp$table$term == "children_2022"],
+  ols_worked$table$estimate[ols_worked$table$term == "children_2022"],
+  ols_earnings$table$estimate[ols_earnings$table$term == "children_2022"]
+)
+ols_se <- c(
+  ols_self_emp$table$robust_se[ols_self_emp$table$term == "children_2022"],
+  ols_worked$table$robust_se[ols_worked$table$term == "children_2022"],
+  ols_earnings$table$robust_se[ols_earnings$table$term == "children_2022"]
+)
+ols_p <- c(
+  ols_self_emp$table$p[ols_self_emp$table$term == "children_2022"],
+  ols_worked$table$p[ols_worked$table$term == "children_2022"],
+  ols_earnings$table$p[ols_earnings$table$term == "children_2022"]
+)
+
+iv_est <- c(
+  iv_self_emp$table$estimate[iv_self_emp$table$term == "children_2022"],
+  iv_worked$table$estimate[iv_worked$table$term == "children_2022"],
+  iv_earnings$table$estimate[iv_earnings$table$term == "children_2022"]
+)
+iv_se <- c(
+  iv_self_emp$table$robust_se[iv_self_emp$table$term == "children_2022"],
+  iv_worked$table$robust_se[iv_worked$table$term == "children_2022"],
+  iv_earnings$table$robust_se[iv_earnings$table$term == "children_2022"]
+)
+iv_p <- c(
+  iv_self_emp$table$p[iv_self_emp$table$term == "children_2022"],
+  iv_worked$table$p[iv_worked$table$term == "children_2022"],
+  iv_earnings$table$p[iv_earnings$table$term == "children_2022"]
+)
+
+comparison_table <- data.frame(
+  Outcome = outcomes,
+  OLS = coef_se_cell(ols_est, ols_se, ols_p, coef_digits),
+  IV = coef_se_cell(iv_est, iv_se, iv_p, coef_digits),
+  check.names = FALSE
+)
+
+ols_self_emp_coef <- ols_est[1]
+ols_earnings_coef <- ols_est[3]
+iv_self_emp_coef <- iv_est[1]
+iv_earnings_coef <- iv_est[3]
+self_emp_count <- sum(women$self_emp_strict_2022 == 1, na.rm = TRUE)
+self_emp_rate <- self_emp_count / women_count
+iv_self_emp_pp <- 100 * iv_self_emp_coef
+iv_self_emp_relative <- 100 * iv_self_emp_coef / self_emp_rate
+twin_count <- sum(women$twin_ever == 1, na.rm = TRUE)
+
+paper_table(
+  comparison_table,
+  caption = "Estimated Effect of an Additional Child: OLS vs IV Estimates",
+  align = c("l", "c", "c"),
+  escape = FALSE
+)
+```
+Notes: Robust HC1 standard errors are reported in parentheses. Statistical significance levels are denoted by *** p < 0.01, ** p < 0.05, and * p < 0.10.
+
+The table above summarizes the estimated relationship between fertility and the three main outcomes using both OLS and IV/2SLS specifications.
+
+The OLS estimates suggest that fertility is positively associated with self-employment and negatively associated with earnings. In particular, each additional child is associated with approximately a `r sprintf("%.2f", 100 * ols_self_emp_coef)` percentage-point increase in self-employment and a reduction of roughly $`r format(round(abs(ols_earnings_coef), 0), big.mark = ",")` in annual earnings. Both the self-employment and earnings estimates are statistically significant at the 5 percent level.
+
+However, these OLS estimates may partly reflect selection because women with different family-size preferences, career goals, or family backgrounds may differ systematically from one another.
+
+The IV estimates using twin/triplet births as an instrument do not provide statistically significant evidence that fertility affects self-employment, employment, or earnings. The estimated coefficient for self-employment remains positive (`r sprintf("%.4f", iv_self_emp_coef)`), but none of the IV estimates are statistically distinguishable from zero.
+
+The self-employment estimates deserve careful interpretation because the IV estimate is larger than the OLS estimate. The OLS coefficient is `r sprintf("%.4f", ols_self_emp_coef)`, while the IV coefficient is `r sprintf("%.4f", iv_self_emp_coef)`. Several mechanisms could explain why the OLS estimate is smaller.
+
+First, self-employment may itself affect fertility decisions. Because self-employment often offers greater flexibility in work schedules and location, women who become self-employed may subsequently choose to have more children. In this case, fertility and self-employment are jointly determined, creating reverse causality that may bias OLS estimates.
+
+Second, fertility may affect women differently. Some mothers may enter self-employment because it provides flexibility for balancing work and childcare responsibilities. At the same time, other mothers may leave self-employment because entrepreneurship can be risky and time-intensive. As a result, OLS estimates may average together positive and negative responses to fertility, weakening the observed relationship. 
+
+Third, fertility choices may be correlated with unobserved characteristics such as career preferences, labor market attachment, or family support. If these characteristics affect both fertility and entrepreneurship decisions, OLS estimates may not fully reflect the causal effect of fertility.
+
+The IV specification attempts to address these concerns by isolating fertility variation generated by twin or triplet births. However, because the IV estimate is imprecisely estimated, these interpretations should be viewed as suggestive rather than conclusive.
+
+It is useful to distinguish statistical significance from economic significance. The self-employment outcome is a binary variable, and `r self_emp_count` out of `r format(women_count, big.mark = ",")` women in the sample are self-employed, implying a baseline self-employment rate of about `r sprintf("%.1f", 100 * self_emp_rate)` percent. The IV point estimate of `r sprintf("%.4f", iv_self_emp_coef)` corresponds to about `r sprintf("%.1f", iv_self_emp_pp)` percentage points, or roughly `r sprintf("%.0f", iv_self_emp_relative)` percent of the baseline self-employment rate. This magnitude is not necessarily economically trivial in relation to the low baseline rate. However, the estimate is statistically insignificant and imprecise, so it should not be interpreted as evidence that fertility increases self-employment. The more cautious interpretation is that the point estimate is positive but too imprecisely estimated to support a strong conclusion. For employment and earnings, the IV point estimates are also statistically insignificant; the earnings estimate is especially close to zero in economic terms, at about $`r sprintf("%.0f", abs(iv_earnings_coef))`.
+
+The lack of statistical significance should be interpreted with caution. While the overall sample contains `r format(women_count, big.mark = ",")` women, only `r twin_count` respondents experienced a recorded twin or triplet birth. OLS uses all observed variation in fertility, but IV uses only the variation in fertility that is explained by twin or triplet births. As a result, the IV estimates are based on much less identifying variation. This leads to larger standard errors, wider confidence intervals, and lower statistical power. Therefore, the results should be interpreted as providing limited evidence of a fertility effect rather than definitive evidence that the true effect is zero.
+
+Taken together, the comparison between OLS and IV estimates suggests that accounting for fertility endogeneity changes the interpretation of the results. For self-employment, the IV point estimate is larger than the OLS estimate, but it is also much less precise and is not statistically significant. For earnings, the negative OLS relationship largely disappears under IV: the IV earnings estimate is close to zero and statistically insignificant. Therefore, the results do not show a clear causal effect of fertility on late-career self-employment, employment, or earnings. More broadly, once fertility endogeneity is addressed using twin and triplet births, the evidence for large causal effects becomes weaker.
+
+
+# 6. Robustness Checks
+
+## 6.1 Alternative Entrepreneurship Definition
+
+This robustness check expands the entrepreneurship definition to include women who are either self-employed or working in a family business. The broader definition increases the number of entrepreneurship-related observations, which may improve statistical precision, while also capturing alternative forms of work that can provide flexibility similar to self-employment. Because family-business workers are not necessarily business owners, however, this specification should be interpreted as a broader entrepreneurship-related measure rather than a direct measure of entrepreneurship.
+
+```{r iv-family-business}
+iv_self_emp_family <- iv_2sls_hc1(
+  y = "self_emp_family_2022",
+  x_endog = "children_2022",
+  z_inst = "twin_ever",
+  controls = controls,
+  data = women
+)
+
+iv_family_pretty <- iv_self_emp_family$table
+
+iv_family_pretty$term[iv_family_pretty$term == "(Intercept)"] <- "Intercept"
+iv_family_pretty$term[iv_family_pretty$term == "children_2022"] <- "Children"
+iv_family_pretty$term[iv_family_pretty$term == "age_2022_est"] <- "Age"
+iv_family_pretty$term[iv_family_pretty$term == "educ"] <- "Education"
+iv_family_pretty$term[iv_family_pretty$term == "mother_educ"] <- "Mother's Education"
+iv_family_pretty$term[iv_family_pretty$term == "father_educ"] <- "Father's Education"
+iv_family_pretty$term[iv_family_pretty$term == "married_2022TRUE"] <- "Married"
+iv_family_pretty$term[iv_family_pretty$term == "race2"] <- "Black"
+iv_family_pretty$term[iv_family_pretty$term == "race3"] <- "Non-Black/Non-Hispanic"
+
+iv_family_pretty <- data.frame(
+  Variable = iv_family_pretty$term,
+  Estimate = coef_se_cell(
+    iv_family_pretty$estimate,
+    iv_family_pretty$robust_se,
+    iv_family_pretty$p,
+    3
+  ),
+  `p-value` = sprintf("%.3f", iv_family_pretty$p),
+  check.names = FALSE
+)
+
+rownames(iv_family_pretty) <- NULL
+
+iv_family_coef <- iv_self_emp_family$table$estimate[
+  iv_self_emp_family$table$term == "children_2022"
+]
+iv_family_p <- iv_self_emp_family$table$p[
+  iv_self_emp_family$table$term == "children_2022"
+]
+
+paper_table(
+  iv_family_pretty,
+  caption = "IV Estimates Using Broader Entrepreneurship Definition",
+  escape = FALSE
+)
+```
+Notes: Robust HC1 standard errors are reported in parentheses. Statistical significance levels are denoted by *** p < 0.01, ** p < 0.05, and * p < 0.10.
+
+Using the broader entrepreneurship definition produces results that are qualitatively similar to the baseline specification. The estimated fertility coefficient remains positive (`r sprintf("%.3f", iv_family_coef)`) but is not statistically significant (p = `r sprintf("%.3f", iv_family_p)`). The sign and magnitude of the estimate are broadly consistent with the baseline IV results, suggesting that the main conclusions do not materially change under this alternative outcome definition.
+
+
+## 6.2 Education Heterogeneity
+
+To explore whether the relationship between fertility and self-employment differs by educational attainment, the baseline IV specification is estimated separately for BA+ women and non-BA women. As described previously, BA+ is proxied by completing four or more years of college, while non-BA includes respondents with fewer than four years of college. The equation below is estimated within each subgroup:
+
+\compacteq{Y_i = \alpha + \beta \widehat{Children}_i + X_i'\gamma + \varepsilon_i}
+
+Separate estimation allows the fertility effect to vary across education groups.
+
+```{r heterogeneity}
+women_ba <- subset(women, ba_plus == 1)
+women_no_ba <- subset(women, ba_plus == 0)
+
+iv_self_emp_ba <- iv_2sls_hc1(
+  y = "self_emp_strict_2022",
+  x_endog = "children_2022",
+  z_inst = "twin_ever",
+  controls = c("mother_educ", "father_educ", "married_2022", "race"),
+  data = women_ba
+)
+
+iv_self_emp_no_ba <- iv_2sls_hc1(
+  y = "self_emp_strict_2022",
+  x_endog = "children_2022",
+  z_inst = "twin_ever",
+  controls = c("mother_educ", "father_educ", "married_2022", "race"),
+  data = women_no_ba
+)
+
+heterogeneity_est <- c(
+  iv_self_emp_ba$table$estimate[
+    iv_self_emp_ba$table$term=="children_2022"
+  ],
+  iv_self_emp_no_ba$table$estimate[
+    iv_self_emp_no_ba$table$term=="children_2022"
+  ]
+)
+
+heterogeneity_se <- c(
+  iv_self_emp_ba$table$robust_se[
+    iv_self_emp_ba$table$term=="children_2022"
+  ],
+  iv_self_emp_no_ba$table$robust_se[
+    iv_self_emp_no_ba$table$term=="children_2022"
+  ]
+)
+
+heterogeneity_p <- c(
+  iv_self_emp_ba$table$p[
+    iv_self_emp_ba$table$term=="children_2022"
+  ],
+  iv_self_emp_no_ba$table$p[
+    iv_self_emp_no_ba$table$term=="children_2022"
+  ]
+)
+
+heterogeneity_table <- data.frame(
+  Group = c("BA+", "Non-BA"),
+  Estimate = coef_se_cell(heterogeneity_est, heterogeneity_se, heterogeneity_p, 3),
+  `p-value` = sprintf("%.3f", heterogeneity_p),
+  check.names = FALSE
+)
+
+paper_table(
+  heterogeneity_table,
+  caption = "Education Heterogeneity Analysis",
+  escape = FALSE
+)
+```
+Notes: Robust HC1 standard errors are reported in parentheses. Statistical significance levels are denoted by *** p < 0.01, ** p < 0.05, and * p < 0.10.
+
+The education heterogeneity analysis provides suggestive evidence that fertility may affect women differently across educational attainment groups. Among BA+ women, the estimated fertility effect is `r sprintf("%.3f", heterogeneity_est[1])`, whereas the corresponding estimate among non-BA women is `r sprintf("%.3f", heterogeneity_est[2])`.
+
+Although neither estimate is statistically significant, the difference in signs is broadly consistent with the hypothesis that the relationship between fertility and self-employment may vary by educational attainment. However, the number of twin births becomes substantially smaller after dividing the sample into education groups, limiting statistical power and resulting in imprecise estimates.
+
+Therefore, these results should be interpreted as exploratory rather than conclusive evidence of heterogeneity. Additional data or stronger sources of variation would be needed to determine whether fertility truly affects self-employment differently across education groups.
+
+
+## 6.3 Matching 
+
+One-to-one nearest-neighbor propensity score matching with replacement is used as a robustness check to compare women with higher fertility to observationally similar women with lower fertility. The treatment is defined as having at least two children, and the outcome is 2022 self-employment status. I estimate the Average Treatment Effect on the Treated (ATT) using nearest-neighbor propensity score matching based on education, parental education, marital status, and race.
+
+\compacteq{ATT = E[Y(1)-Y(0)\mid D=1]}
+
+where ($D=1$) indicates women with two or more children, ($Y(1)$) is the potential outcome under higher fertility, and ($Y(0)$) is the potential outcome under lower fertility.
+
+```{r matching-helpers}
+nearest_neighbor_match <- function(data, treatment, outcome, covariates, caliper = NULL) {
+  vars <- c(treatment, outcome, covariates)
+  dat <- na.omit(data[vars])
+  dat[[treatment]] <- as.integer(dat[[treatment]] == 1)
+
+  ps_formula <- as.formula(paste(treatment, "~", paste(covariates, collapse = " + ")))
+  ps_model <- glm(ps_formula, data = dat, family = binomial())
+  dat$pscore <- as.numeric(predict(ps_model, type = "response"))
+
+  treated <- dat[dat[[treatment]] == 1, ]
+  control <- dat[dat[[treatment]] == 0, ]
+
+  matched_list <- lapply(seq_len(nrow(treated)), function(i) {
+    distances <- abs(control$pscore - treated$pscore[i])
+    best <- which.min(distances)
+
+    treated_row <- treated[i, , drop = FALSE]
+    control_covs <- control[best, covariates, drop = FALSE]
+    names(control_covs) <- paste0("control_", names(control_covs))
+
+    cbind(
+      treated_row,
+      control_outcome = control[[outcome]][best],
+      distance = distances[best],
+      control_covs
+    )
+  })
+
+  matched <- do.call(rbind, matched_list)
+
+  if (!is.null(caliper)) {
+    matched <- matched[matched$distance <= caliper, ]
+  }
+
+  diff <- matched[[outcome]] - matched$control_outcome
+
+  list(
+    n_treated = nrow(treated),
+    n_matched = nrow(matched),
+    att = mean(diff, na.rm = TRUE),
+    se = sd(diff, na.rm = TRUE) / sqrt(sum(!is.na(diff))),
+    t = mean(diff, na.rm = TRUE) /
+      (sd(diff, na.rm = TRUE) / sqrt(sum(!is.na(diff)))),
+    matched = matched
+  )
+}
+```
+
+```{r matching-full-sample}
+women$high_fertility <- as.integer(women$children_2022 >= 2)
+
+match_covariates <- c("age_2022_est", "educ", "mother_educ", "father_educ", "married_2022", "race")
+
+match_self_emp <- nearest_neighbor_match(
+  data = women,
+  treatment = "high_fertility",
+  outcome = "self_emp_strict_2022",
+  covariates = match_covariates
+)
+
+matching_results <- data.frame(
+  Statistic = c("Matched pairs", "ATT", "Standard error", "t-statistic"),
+  Value = c(
+    match_self_emp$n_matched,
+    sprintf("%.4f", match_self_emp$att),
+    sprintf("%.4f", match_self_emp$se),
+    sprintf("%.2f", match_self_emp$t)
+  ),
+  check.names = FALSE
+)
+
+paper_table(
+  matching_results,
+  caption = "Matching Results",
+  align = c("l", "c")
+)
+```
+The estimated ATT is `r sprintf("%.4f", match_self_emp$att)`, implying that women with two or more children are approximately `r sprintf("%.2f", 100 * match_self_emp$att)` percentage points more likely to be self-employed than matched women with fewer children. This estimate is not statistically strong and should not be interpreted as conclusive evidence of an effect. 
+
+The matching estimate should not be directly compared to the IV estimate because the two methods estimate different parameters: matching compares women with two or more children to similar women with fewer children, while IV estimates the effect of fertility changes induced by twin or triplet births. The similarity between the matching ATT (`r sprintf("%.4f", match_self_emp$att)`) and the IV estimate (`r sprintf("%.4f", iv_self_emp_coef)`) is interesting, but should not be overinterpreted. Moreover, matching remains a robustness check because it only adjusts for observable characteristics.
+
+\Needspace{8\baselineskip}
+
+```{r matching-education-splits}
+match_self_emp_ba <- nearest_neighbor_match(
+  data = subset(women, ba_plus == 1),
+  treatment = "high_fertility",
+  outcome = "self_emp_strict_2022",
+  covariates = c("age_2022_est", "mother_educ", "father_educ", "married_2022", "race")
+)
+
+match_self_emp_no_ba <- nearest_neighbor_match(
+  data = subset(women, ba_plus == 0),
+  treatment = "high_fertility",
+  outcome = "self_emp_strict_2022",
+  covariates = c("age_2022_est", "mother_educ", "father_educ", "married_2022", "race")
+)
+
+matching_edu_results <- data.frame(
+  Group = c("BA+", "Non\\mbox{-}BA"),
+  `Treated Women` = c(match_self_emp_ba$n_treated, match_self_emp_no_ba$n_treated),
+  `Matched Pairs` = c(match_self_emp_ba$n_matched, match_self_emp_no_ba$n_matched),
+  ATT = coef_se_cell(
+    c(match_self_emp_ba$att, match_self_emp_no_ba$att),
+    c(match_self_emp_ba$se, match_self_emp_no_ba$se),
+    digits = 4
+  ),
+  `t-statistic` = round(c(match_self_emp_ba$t, match_self_emp_no_ba$t), 2),
+  check.names = FALSE
+)
+
+rownames(matching_edu_results) <- NULL
+
+paper_table(
+  matching_edu_results,
+  caption = "Matching Results by Education Group",
+  align = c("l", "c", "c", "c", "c"),
+  escape = FALSE
+)
+```
+The education-specific matching estimate is positive for BA+ women and close to zero for non-BA women. This pattern is qualitatively consistent with the IV heterogeneity analysis, which also suggests larger self-employment effects among BA+ women. However, the magnitude of the difference across education groups is substantially smaller in the matching analysis, and neither estimate is statistically significant. Therefore, the evidence for education heterogeneity remains suggestive rather than conclusive.
+
+```{r matching-balance-check}
+balance_before_after <- function(data, treatment, covariates, match_object) {
+  dat <- na.omit(data[c(treatment, covariates)])
+  dat[[treatment]] <- as.integer(dat[[treatment]] == 1)
+
+  treated <- dat[dat[[treatment]] == 1, ]
+  control <- dat[dat[[treatment]] == 0, ]
+  matched <- match_object$matched
+
+  one_balance_row <- function(label, before_treated, before_control,
+                              after_treated, after_control) {
+    data.frame(
+      Variable = label,
+      `Treated Before` = mean(before_treated, na.rm = TRUE),
+      `Control Before` = mean(before_control, na.rm = TRUE),
+      `Difference Before` = mean(before_treated, na.rm = TRUE) -
+        mean(before_control, na.rm = TRUE),
+      `Treated After` = mean(after_treated, na.rm = TRUE),
+      `Matched Control After` = mean(after_control, na.rm = TRUE),
+      `Difference After` = mean(after_treated, na.rm = TRUE) -
+        mean(after_control, na.rm = TRUE)
+    )
+  }
+
+  out <- lapply(covariates, function(v) {
+    control_v <- paste0("control_", v)
+
+    if (is.factor(dat[[v]])) {
+      levels_v <- levels(dat[[v]])
+      levels_v <- levels_v[!is.na(levels_v)]
+
+      return(do.call(rbind, lapply(levels_v, function(level_v) {
+        one_balance_row(
+          label = paste0(v, " = ", level_v),
+          before_treated = treated[[v]] == level_v,
+          before_control = control[[v]] == level_v,
+          after_treated = matched[[v]] == level_v,
+          after_control = matched[[control_v]] == level_v
+        )
+      })))
+    }
+
+    one_balance_row(
+      label = v,
+      before_treated = treated[[v]],
+      before_control = control[[v]],
+      after_treated = matched[[v]],
+      after_control = matched[[control_v]]
+    )
+  })
+
+  out <- do.call(rbind, out)
+  rownames(out) <- NULL
+  out
+}
+
+balance_table <- balance_before_after(
+  data = women,
+  treatment = "high_fertility",
+  covariates = match_covariates,
+  match_object = match_self_emp
+)
+
+numeric_balance_cols <- vapply(balance_table, is.numeric, logical(1))
+balance_table[numeric_balance_cols] <- lapply(
+  balance_table[numeric_balance_cols],
+  function(x) round(x, 3)
+)
+
+colnames(balance_table) <- c(
+  "Variable",
+  "Treated Before",
+  "Control Before",
+  "Diff. Before",
+  "Treated After",
+  "Matched Control After",
+  "Diff. After"
+)
+
+balance_table <- balance_table[, c("Variable", "Diff. Before", "Diff. After")]
+balance_table$Variable <- label_variable(balance_table$Variable)
+
+balance_educ_before <- balance_table$`Diff. Before`[balance_table$Variable == "Education"]
+balance_educ_after <- balance_table$`Diff. After`[balance_table$Variable == "Education"]
+balance_married_before <- balance_table$`Diff. Before`[balance_table$Variable == "Married"]
+balance_married_after <- balance_table$`Diff. After`[balance_table$Variable == "Married"]
+
+paper_table(
+  balance_table,
+  caption = "Covariate Balance Before and After Matching"
+)
+```
+Table 8 reports covariate mean differences before and after nearest-neighbor propensity score matching. Before matching, women with two or more children differed from women with fewer children on several observed characteristics. For example, treated women had lower average education than controls, with a pre-matching difference of `r sprintf("%.3f", balance_educ_before)` years, and were more likely to be married in 2022, with a difference of `r sprintf("%.3f", balance_married_before)`. After matching, these differences became smaller. The education difference decreased in absolute value to `r sprintf("%.3f", abs(balance_educ_after))` years, and the marriage-status difference decreased to `r sprintf("%.3f", balance_married_after)`. Balance also improved for age, although parental education and race categories did not improve uniformly. These patterns suggest that the matching procedure improved comparability on some observed covariates, but not perfectly across all controls. Because matching cannot account for unobserved fertility preferences, career orientation, or family support, the matching estimates remain robustness checks rather than the preferred causal estimates.
+
+Overall, the matching results point in the same qualitative direction as the IV results. Both the matching and IV analyses produce positive self-employment point estimates, although the estimates remain statistically imprecise. Because matching only adjusts for observable characteristics and cannot account for unobserved fertility preferences or career orientations, the IV results remain the preferred source of causal inference in this study.
+
+
+## 6.4 Larger-Sample Specification
+
+The baseline IV specification includes age and marital status as control variables. However, these variables contain a substantial number of missing observations. In particular, the approximate age measure is constructed using information from the NLS Children and Young Adults dataset and is unavailable for many respondents. As a result, the effective regression sample decreases from `r format(women_count, big.mark = ",")` women to `r format(iv_self_emp$n, big.mark = ",")` women after listwise deletion.
+
+To examine whether the main findings are sensitive to this reduction in sample size, this robustness check re-estimates the IV specifications using a reduced set of controls that excludes age and marital status. Excluding these variables increases the available sample while retaining key socioeconomic controls such as education, parental education, and race.
+
+The exclusion of age and marital status is less problematic in this setting than in many applications. NLSY79 respondents belong to a relatively narrow birth cohort and are in their late 50s to mid-60s in 2022, limiting age variation across individuals. In addition, marital status is closely related to fertility and family formation decisions. Therefore, this specification is intended primarily as a robustness check to assess the sensitivity of the results to the substantial sample loss associated with these controls rather than as a replacement for the baseline specification.
+
+```{r larger-sample-specification}
+# Larger-sample IV specification without age and marital-status controls
+
+controls_large <- c(
+  "educ",
+  "mother_educ",
+  "father_educ",
+  "race"
+)
+
+iv_self_emp_large <- iv_2sls_hc1(
+  y = "self_emp_strict_2022",
+  x_endog = "children_2022",
+  z_inst = "twin_ever",
+  controls = controls_large,
+  data = women
+)
+
+iv_worked_large <- iv_2sls_hc1(
+  y = "worked_2022",
+  x_endog = "children_2022",
+  z_inst = "twin_ever",
+  controls = controls_large,
+  data = women
+)
+
+iv_earnings_large <- iv_2sls_hc1(
+  y = "wage_income_2022",
+  x_endog = "children_2022",
+  z_inst = "twin_ever",
+  controls = controls_large,
+  data = women
+)
+
+large_baseline_est <- c(
+  iv_self_emp$table$estimate[iv_self_emp$table$term == "children_2022"],
+  iv_worked$table$estimate[iv_worked$table$term == "children_2022"],
+  iv_earnings$table$estimate[iv_earnings$table$term == "children_2022"]
+)
+large_baseline_se <- c(
+  iv_self_emp$table$robust_se[iv_self_emp$table$term == "children_2022"],
+  iv_worked$table$robust_se[iv_worked$table$term == "children_2022"],
+  iv_earnings$table$robust_se[iv_earnings$table$term == "children_2022"]
+)
+large_baseline_p <- c(
+  iv_self_emp$table$p[iv_self_emp$table$term == "children_2022"],
+  iv_worked$table$p[iv_worked$table$term == "children_2022"],
+  iv_earnings$table$p[iv_earnings$table$term == "children_2022"]
+)
+
+large_sample_est <- c(
+  iv_self_emp_large$table$estimate[iv_self_emp_large$table$term == "children_2022"],
+  iv_worked_large$table$estimate[iv_worked_large$table$term == "children_2022"],
+  iv_earnings_large$table$estimate[iv_earnings_large$table$term == "children_2022"]
+)
+large_sample_se <- c(
+  iv_self_emp_large$table$robust_se[iv_self_emp_large$table$term == "children_2022"],
+  iv_worked_large$table$robust_se[iv_worked_large$table$term == "children_2022"],
+  iv_earnings_large$table$robust_se[iv_earnings_large$table$term == "children_2022"]
+)
+large_sample_p <- c(
+  iv_self_emp_large$table$p[iv_self_emp_large$table$term == "children_2022"],
+  iv_worked_large$table$p[iv_worked_large$table$term == "children_2022"],
+  iv_earnings_large$table$p[iv_earnings_large$table$term == "children_2022"]
+)
+
+large_sample_table <- data.frame(
+  Outcome = c("Self-employment", "Employment", "Earnings"),
+  `Baseline IV` = coef_se_cell(large_baseline_est, large_baseline_se, large_baseline_p, coef_digits),
+  `Larger-Sample IV` = coef_se_cell(large_sample_est, large_sample_se, large_sample_p, coef_digits),
+  check.names = FALSE
+)
+
+baseline_self_emp_n <- iv_self_emp$n
+baseline_earnings_n <- iv_earnings$n
+larger_self_emp_n <- iv_self_emp_large$n
+larger_earnings_n <- iv_earnings_large$n
+baseline_self_emp_se <- large_baseline_se[1]
+larger_self_emp_se <- large_sample_se[1]
+larger_self_emp_coef <- large_sample_est[1]
+baseline_worked_coef <- large_baseline_est[2]
+larger_worked_coef <- large_sample_est[2]
+baseline_earnings_coef <- large_baseline_est[3]
+larger_earnings_coef <- large_sample_est[3]
+
+baseline_iv_vars <- c(
+  "self_emp_strict_2022",
+  "children_2022",
+  "twin_ever",
+  controls
+)
+
+larger_iv_vars <- c(
+  "self_emp_strict_2022",
+  "children_2022",
+  "twin_ever",
+  controls_large
+)
+
+baseline_iv_sample <- women[complete.cases(women[baseline_iv_vars]), ]
+larger_iv_sample <- women[complete.cases(women[larger_iv_vars]), ]
+
+baseline_all_minus5 <- sum(baseline_iv_sample$child_roster_all_minus5, na.rm = TRUE)
+larger_all_minus5 <- sum(larger_iv_sample$child_roster_all_minus5, na.rm = TRUE)
+baseline_fertility_mismatch <- sum(
+  baseline_iv_sample$children_2022 != baseline_iv_sample$linked_child_count,
+  na.rm = TRUE
+)
+larger_zero_linked_positive <- sum(
+  larger_iv_sample$children_2022 == 0 &
+    larger_iv_sample$linked_child_count > 0,
+  na.rm = TRUE
+)
+larger_all_minus5_zero_linked_positive <- sum(
+  larger_iv_sample$child_roster_all_minus5 &
+    larger_iv_sample$children_2022 == 0 &
+    larger_iv_sample$linked_child_count > 0,
+  na.rm = TRUE
+)
+
+paper_table(
+  large_sample_table,
+  caption = "Larger-Sample IV Specification",
+  align = c("l", "c", "c"),
+  escape = FALSE
+)
+```
+Notes: Robust HC1 standard errors are reported in parentheses. Statistical significance levels are denoted by *** p < 0.01, ** p < 0.05, and * p < 0.10.
+
+The larger-sample specification increases the number of observations from `r format(baseline_self_emp_n, big.mark = ",")` to `r format(larger_self_emp_n, big.mark = ",")` for the self-employment and employment analyses by excluding age and marital-status controls. For earnings, the sample increases from `r format(baseline_earnings_n, big.mark = ",")` to `r format(larger_earnings_n, big.mark = ",")` observations. This increase in sample size improves precision: for self-employment, the robust standard error falls from `r sprintf("%.4f", baseline_self_emp_se)` in the baseline IV specification to `r sprintf("%.4f", larger_self_emp_se)` in the larger-sample specification.
+
+For self-employment, the point estimate remains positive and similar in magnitude to the baseline IV estimate. The coefficient increases slightly from `r sprintf("%.4f", iv_self_emp_coef)` to `r sprintf("%.4f", larger_self_emp_coef)`. However, even with the lower standard error, the estimate remains statistically insignificant, and the similarity in sign should be interpreted cautiously because the larger-sample specification changes both the control set and the sample composition.
+
+The results for employment and earnings are more sensitive to specification choice. The employment coefficient changes from `r sprintf("%.4f", baseline_worked_coef)` in the baseline model to `r sprintf("%.4f", larger_worked_coef)` in the larger-sample specification and becomes statistically significant. The sign reversal and statistical significance suggest that the employment estimate is sensitive to sample composition and/or the exclusion of age and marital-status controls. Similarly, the earnings coefficient increases from `r sprintf("%.2f", baseline_earnings_coef)` to `r sprintf("%.2f", larger_earnings_coef)`, although it remains statistically insignificant.
+
+It is important to emphasize that the larger-sample specification is not simply the baseline model with more observations. It also changes the set of included controls by removing age and marital status. Therefore, differences between the baseline and larger-sample estimates may reflect increased precision, changes in sample composition, omitted-variable effects from removing controls, or some combination of these factors. 
+
+Appendix Table A2 shows that the baseline and larger-sample IV samples differ on several important characteristics. The larger-sample specification contains women with lower average fertility, lower self-employment rates, lower employment rates, and a somewhat different racial composition. These differences arise because the larger-sample specification does not require non-missing age and marital-status controls. Consequently, differences between baseline and larger-sample estimates may reflect both improved precision and changes in sample composition.
+
+Subsequent investigation revealed that the broader sample includes many respondents whose 2022 child-roster information is coded as non-observed. In the preferred baseline IV sample, `r format(baseline_all_minus5, big.mark = ",")` respondents have all child-roster slots coded as non-observed, and there are `r format(baseline_fertility_mismatch, big.mark = ",")` differences between the roster-based fertility count and linked child-record count. In contrast, the larger-sample specification includes `r format(larger_all_minus5, big.mark = ",")` respondents with all roster slots coded as non-observed, including `r format(larger_all_minus5_zero_linked_positive, big.mark = ",")` respondents whose roster-based count is zero but whose linked child records indicate at least one child. Because the fertility measure is constructed from observed entries in the 2022 child roster, fertility may be understated for some respondents in the broader sample. Consequently, the larger-sample specification should be interpreted as a sensitivity check and viewed with greater caution than the baseline results.
+
+
+# 7. Limitations and Interpretation
+
+Several limitations should be considered when interpreting the findings.
+
+First, although the overall sample contains `r format(women_count, big.mark = ",")` women, only `r twin_count` respondents experienced a recorded twin or triplet birth. In addition, the baseline IV specification uses only `r format(baseline_self_emp_n, big.mark = ",")` observations because several control variables contain substantial missing data. The IV estimates use only the variation in fertility explained by twin or triplet births, rather than all observed fertility variation. This limited identifying variation reduces precision and increases standard errors. As a result, the absence of statistical significance should not be interpreted as definitive evidence that the true effect is zero.
+
+This limitation is especially important for interpreting the self-employment result. As discussed previously, the IV point estimate is not necessarily economically trivial relative to the low baseline self-employment rate. However, the limited number of twin and triplet births means that the estimate remains statistically insignificant and imprecise. Therefore, the result should be read cautiously as suggestive rather than conclusive.
+
+Second, the instrumental variable identifies a Local Average Treatment Effect (LATE). In this context, the estimates reflect the effect of fertility for women whose family size was affected by experiencing a twin or triplet birth. Therefore, the estimated effects may not generalize to all women in the population. In addition, the instrument is defined as ever experiencing a twin or triplet birth, which differs from the more common "twin at second birth" design used in some fertility studies.
+
+Third, several variables are constructed from available data sources rather than directly observed measures. Fertility is measured using the 2022 child roster, and the age variable is approximated using information from the NLS Children and Young Adults dataset. While these measures allow implementation of the analysis, they may introduce some measurement error. The preferred baseline IV sample does not appear to be affected by the non-observed 2022 roster-value issue, but the larger-sample robustness check may be more vulnerable to this problem and is therefore treated as secondary evidence.
+
+Fourth, the labor market outcomes are measured in 2022, when NLSY79 respondents are in their late 50s to mid-60s and are already relatively late in their working lives. As a result, the estimates should be interpreted as reflecting later-career labor market outcomes rather than entrepreneurship decisions earlier in adulthood.
+
+Fifth, the matching analysis should be viewed as a robustness check rather than a primary source of causal evidence. Matching can improve comparability between women with different fertility levels, but it only accounts for observed characteristics and cannot fully address unobserved differences in preferences, family background, or career orientation.
+
+Finally, preliminary exploratory analysis using a longitudinal measure of entry into self-employment after childbirth, reported in Appendix Table A5, produced a statistically insignificant IV estimate close to zero. Because that measure requires additional assumptions regarding timing and sample construction, it should be interpreted as exploratory evidence rather than as a replacement for the main 2022 self-employment specification.
+
+# 8. Future Research
+
+Future work could improve this project in several ways. First, a cleaner fertility measure could be constructed from richer fertility histories rather than relying only on occupied child-roster slots in 2022. Second, the instrumental variable strategy could be refined by using a twin-at-second-birth design, which is closer to the standard approach in the fertility-IV literature. Third, a larger sample of twin births would improve statistical power and reduce the imprecision of the IV estimates.
+
+Because the NLSY79 is a panel dataset that follows respondents over time, future research could also exploit the panel structure more fully by studying entrepreneurship across multiple survey years rather than focusing only on self-employment status in 2022. This would make it possible to distinguish persistent entrepreneurs, temporary entrepreneurs, and women who were self-employed earlier in adulthood but exited self-employment by 2022. A panel approach could also examine whether women enter self-employment after childbirth, rather than already being self-employed before having children. Preliminary exploration using linked child records and longitudinal class-of-worker histories suggests that constructing such a measure is feasible, although doing so would require substantial restructuring of the data into a person-year format and harmonization of entrepreneurship measures across survey waves. A stronger design would restrict attention to entrepreneurship transitions that occur after fertility changes, which would better address concerns about reverse causality between self-employment and fertility decisions.
+
+
+# 9. Conclusion
+
+This paper examined whether fertility affects female entrepreneurship and labor market outcomes using twin and triplet births as an instrumental variable for fertility. The first-stage results show that multiple births strongly predict fertility, supporting the relevance of the instrument. However, the evidence for the substantive hypotheses is limited because the IV estimates for self-employment, employment, and earnings are not statistically significant. The education heterogeneity analysis provides suggestive evidence related to H4, as the estimated self-employment effect is more positive among BA+ women than among non-BA women, although the subgroup estimates are imprecisely estimated and not statistically significant.
+
+The baseline IV estimates provide little evidence that additional fertility has a statistically detectable causal effect on late-career self-employment, employment, or earnings in the NLSY79 sample. At the same time, the positive self-employment point estimate is not necessarily economically trivial relative to the low baseline self-employment rate. Because the estimate is statistically insignificant and imprecise, it is best interpreted as suggestive rather than conclusive. In contrast, the OLS estimates suggest a positive relationship between fertility and self-employment and a negative relationship between fertility and earnings, indicating that simple observational estimates may partly reflect selection rather than causal effects.
+
+The robustness checks produce mixed results. Expanding the entrepreneurship definition to include family-business work does not materially change the self-employment point estimate. Across most specifications, the self-employment point estimates are positive, although the magnitudes vary and all estimates are statistically insignificant. The education heterogeneity analysis suggests that the relationship may be more positive among BA+ women than among non-BA women, but these subgroup estimates are imprecisely estimated and should be interpreted cautiously. Matching estimates are also positive and broadly consistent with the direction of the IV results, although they should be interpreted as descriptive rather than causal evidence. An exploratory appendix analysis of entry into self-employment after childbirth also produces an IV estimate that is statistically insignificant and close to zero, so it does not change the main conclusion.
+
+The larger-sample IV specification highlights the importance of sample selection and data availability. Although some estimates become more precise when age and marital-status controls are removed, the broader sample includes additional respondents whose fertility information is not observed in the same way as in the preferred baseline sample. Consequently, the larger-sample results are best interpreted as a sensitivity check rather than as stronger evidence than the baseline specification.
+
+Overall, the results do not provide strong evidence that fertility has a large causal effect on late-career female entrepreneurship in this sample once fertility endogeneity is addressed. At the same time, the imprecision of the IV estimates and the sensitivity of some results to specification choice suggest that the relationship remains an important topic for future research.
+
+\clearpage
+
+# References
+
+Angrist, J. D., & Evans, W. N. (1998). Children and their parents' labor supply: Evidence from exogenous variation in family size. *American Economic Review, 88*(3), 450-477.
+
+Rosenzweig, M. R., & Wolpin, K. I. (1980). Life-cycle labor supply and fertility: Causal inferences from household models. *Journal of Political Economy, 88*(2), 328-348.
+
+Wellington, A. J. (2006). Self-employment: The new solution for balancing family and career? *Labour Economics, 13*(3), 357-386.
+
+National Longitudinal Surveys. (n.d.). *National Longitudinal Survey of Youth 1979*. U.S. Bureau of Labor Statistics.
+
+\clearpage
+
+# Appendix
+
+## Appendix Table A1. Variable Definitions and Units
+
+| Variable | Definition | Unit |
+| -------- | ---------- | ---- |
+| Children | Number of occupied child-roster slots in the 2022 supplemental fertility file, counted from valid child sex codes; non-observed roster values are not counted | Count of children |
+| Twin/Triplet Birth | Indicator equal to one if the respondent ever had twins or triplets recorded in the biological child roster | Binary indicator |
+| Self-Employment | Indicator equal to one if the respondent was self-employed in any reported 2022 job | Binary indicator |
+| Self-Employment or Family Business | Indicator equal to one if the respondent was self-employed or working in a family business in any reported 2022 job | Binary indicator |
+| Worked | Indicator equal to one if the respondent worked at least one week in the past calendar year | Binary indicator |
+| Wage Income | Total wage and salary income from the past calendar year, before deductions | Annual USD |
+| Education | Respondent's highest grade ever completed | Grade/year completed |
+| Mother's Education | Highest grade/year of regular school completed by the respondent's mother | Grade/year completed |
+| Father's Education | Highest grade/year of regular school completed by the respondent's father | Grade/year completed |
+| Age | Approximate respondent age in 2022, constructed from age information reported in earlier survey waves and adjusted forward to 2022 | Years |
+| Married | Indicator equal to one if the respondent was married with spouse present in 2022 | Binary indicator |
+| Race/Ethnicity | Race/ethnicity cohort from the screener: Hispanic, Black, or non-Black non-Hispanic | Categorical |
+
+
+\clearpage
+
+## Appendix Table A2. Comparison of Baseline IV and Larger-Sample IV Samples
+
+```{r appendix-sample-comparison, results='asis'}
+baseline_iv_vars <- c(
+  "self_emp_strict_2022",
+  "children_2022",
+  "twin_ever",
+  controls
+)
+
+larger_iv_vars <- c(
+  "self_emp_strict_2022",
+  "children_2022",
+  "twin_ever",
+  controls_large
+)
+
+baseline_iv_sample <- women[complete.cases(women[baseline_iv_vars]), ]
+larger_iv_sample <- women[complete.cases(women[larger_iv_vars]), ]
+
+sample_summary_data <- function(dat) {
+  data.frame(
+    children_2022 = dat$children_2022,
+    twin_ever = dat$twin_ever,
+    self_emp_strict_2022 = dat$self_emp_strict_2022,
+    worked_2022 = dat$worked_2022,
+    wage_income_2022 = dat$wage_income_2022,
+    educ = dat$educ,
+    mother_educ = dat$mother_educ,
+    father_educ = dat$father_educ,
+    age_2022_est = dat$age_2022_est,
+    married_2022 = as.integer(dat$married_2022),
+    race_hispanic = as.integer(dat$race == 1),
+    race_black = as.integer(dat$race == 2),
+    race_nonblack_nonhispanic = as.integer(dat$race == 3)
+  )
+}
+
+sample_stat_table <- function(dat, label) {
+  out <- sample_summary_data(dat)
+
+  data.frame(
+    Variable = names(out),
+    Sample = label,
+    Mean = sapply(out, function(x) mean(x, na.rm = TRUE)),
+    Median = sapply(out, function(x) median(x, na.rm = TRUE)),
+    IQR = sapply(out, function(x) IQR(x, na.rm = TRUE)),
+    N = sapply(out, function(x) sum(!is.na(x))),
+    row.names = NULL
+  )
+}
+
+sample_comparison_long <- rbind(
+  sample_stat_table(baseline_iv_sample, "Baseline IV"),
+  sample_stat_table(larger_iv_sample, "Larger-sample IV")
+)
+
+sample_comparison_table <- sample_comparison_long[
+  order(match(sample_comparison_long$Variable, names(sample_summary_data(women))),
+        sample_comparison_long$Sample),
+]
+
+rownames(sample_comparison_table) <- NULL
+sample_comparison_table$Variable <- label_variable(sample_comparison_table$Variable)
+
+sample_comparison_table[, c("Mean", "Median", "IQR")] <-
+  lapply(sample_comparison_table[, c("Mean", "Median", "IQR")], function(x) round(x, 3))
+
+cat("\\begingroup\\small\n")
+print(paper_table(
+  sample_comparison_table,
+  caption = NULL
+))
+cat("\\endgroup\n")
+```
+
+Appendix Table A2 shows that the baseline and larger-sample IV samples are similar in general demographic characteristics, but differ on several labor market and fertility measures. The larger-sample specification includes many more observations because it does not require non-missing approximate age and marital-status controls. Additional investigation indicates that the preferred baseline IV sample has `r format(baseline_fertility_mismatch, big.mark = ",")` differences between the roster-based fertility count and linked child-record count, whereas the broader sample includes `r format(larger_all_minus5_zero_linked_positive, big.mark = ",")` respondents whose roster-based count is zero but whose linked child records indicate at least one child. As a result, differences between the baseline and larger-sample estimates may reflect improved precision, changes in sample composition, omitted controls, and differences in fertility measurement across samples. This is why the larger-sample specification is interpreted as a sensitivity check rather than the preferred specification.
+
+\clearpage
+
+## Appendix Table A3. Comparison of Self-Employment Estimates Across Specifications
+
+```{r appendix-self-employment-estimates, results='asis'}
+# Summary of estimates reported in previous tables.
+
+self_emp_spec_table <- data.frame(
+  Specification = c(
+    "OLS",
+    "Baseline IV",
+    "Broader Entrepreneurship",
+    "Matching ATT",
+    "Larger-Sample IV (sensitivity check)",
+    "BA+ IV",
+    "Non-BA IV",
+    "BA+ Matching ATT",
+    "Non-BA Matching ATT"
+  ),
+  Estimate = c(
+    sprintf("%.4f", ols_self_emp_coef),
+    sprintf("%.4f", iv_self_emp_coef),
+    sprintf("%.4f", iv_family_coef),
+    sprintf("%.4f", match_self_emp$att),
+    sprintf("%.4f", larger_self_emp_coef),
+    sprintf("%.4f", heterogeneity_est[1]),
+    sprintf("%.4f", heterogeneity_est[2]),
+    sprintf("%.4f", match_self_emp_ba$att),
+    sprintf("%.4f", match_self_emp_no_ba$att)
+  ),
+  check.names = FALSE
+)
+
+cat("\\begingroup\\small\n")
+print(paper_table(
+  self_emp_spec_table,
+  caption = NULL
+))
+cat("\\endgroup\n")
+```
+Most self-employment estimates are positive, although magnitudes vary across specifications and most estimates are statistically insignificant. The subgroup estimates are generally more positive among BA+ women than among non-BA women, but these differences should be interpreted cautiously because the estimates are imprecisely estimated.
+
+\clearpage
+
+## Appendix Table A4. Twin/Triplet Births and Self-Employment
+
+```{r appendix-twin-self-employment-overlap, results='asis'}
+twin_self_emp_overlap <- sum(
+  women$twin_ever == 1 & women$self_emp_strict_2022 == 1,
+  na.rm = TRUE
+)
+
+twin_self_emp_tab <- as.data.frame.matrix(table(
+  `Twin/Triplet Birth` = factor(
+    women$twin_ever,
+    levels = c(0, 1),
+    labels = c("No", "Yes")
+  ),
+  `Self-Employed in 2022` = factor(
+    women$self_emp_strict_2022,
+    levels = c(0, 1),
+    labels = c("No", "Yes")
+  )
+))
+
+twin_self_emp_table <- data.frame(
+  `Twin/Triplet Birth` = rownames(twin_self_emp_tab),
+  `Not Self-Employed` = twin_self_emp_tab[, "No"],
+  `Self-Employed` = twin_self_emp_tab[, "Yes"],
+  check.names = FALSE
+)
+
+rownames(twin_self_emp_table) <- NULL
+
+cat("\\begingroup\\small\n")
+print(paper_table(
+  twin_self_emp_table,
+  caption = NULL,
+  align = c("l", "c", "c")
+))
+cat("\\endgroup\n")
+```
+
+Only `r twin_self_emp_overlap` women both experienced a twin/triplet birth and were self-employed in 2022, reinforcing the limited identifying variation for the self-employment IV estimates.
+
+\clearpage
+
+## Appendix Table A5. Exploratory Longitudinal Entrepreneurship Outcome
+
+```{r appendix-longitudinal-entrepreneurship, results='asis'}
+# Exploratory estimates calculated from linked child timing and class-of-worker histories.
+
+cow_year_vars <- extract_renamed_year_vars(
+  rename_path,
+  "rename [A-Z][0-9]+ COWALL_EMP_[0-9]+_[0-9]{4}"
+)
+cow_year_vars <- cow_year_vars[cow_year_vars$var %in% names(df), ]
+self_emp_years <- sort(unique(cow_year_vars$year))
+
+self_emp_by_year <- sapply(self_emp_years, function(year_i) {
+  vars <- cow_year_vars$var[cow_year_vars$year == year_i]
+  self_emp_code <- ifelse(year_i <= 1993, 3, 4)
+  has_any(df, vars, self_emp_code)
+})
+colnames(self_emp_by_year) <- self_emp_years
+
+first_self_emp_year <- apply(self_emp_by_year, 1, function(x) {
+  observed_years <- as.integer(names(x)[x == 1])
+  if (length(observed_years) == 0) return(NA_integer_)
+  min(observed_years)
+})
+
+self_emp_timing <- data.frame(
+  id = df$R0000100,
+  first_self_emp_year = first_self_emp_year
+)
+
+longitudinal_women <- merge(women, self_emp_timing, by = "id", all.x = TRUE)
+
+longitudinal_women$self_emp_before_childbirth <- with(
+  longitudinal_women,
+  !is.na(first_child_year) &
+    !is.na(first_self_emp_year) &
+    first_self_emp_year < first_child_year
+)
+
+longitudinal_women$self_emp_same_year_childbirth <- with(
+  longitudinal_women,
+  !is.na(first_child_year) &
+    !is.na(first_self_emp_year) &
+    first_self_emp_year == first_child_year
+)
+
+longitudinal_women$ever_self_employed_after_childbirth <- with(
+  longitudinal_women,
+  as.integer(
+    !is.na(first_child_year) &
+      !is.na(first_self_emp_year) &
+      first_self_emp_year > first_child_year
+  )
+)
+
+longitudinal_sample <- subset(
+  longitudinal_women,
+  !is.na(first_child_year) &
+    first_child_year > 1979 &
+    !self_emp_before_childbirth &
+    !self_emp_same_year_childbirth
+)
+
+longitudinal_vars <- c(
+  "ever_self_employed_after_childbirth",
+  "children_2022",
+  "twin_ever",
+  controls
+)
+
+longitudinal_iv_sample <- longitudinal_sample[
+  complete.cases(longitudinal_sample[longitudinal_vars]),
+]
+
+longitudinal_n <- nrow(longitudinal_iv_sample)
+longitudinal_outcome_count <- sum(
+  longitudinal_iv_sample$ever_self_employed_after_childbirth == 1,
+  na.rm = TRUE
+)
+longitudinal_twin_count <- sum(longitudinal_iv_sample$twin_ever == 1, na.rm = TRUE)
+longitudinal_twin_outcome_count <- sum(
+  longitudinal_iv_sample$twin_ever == 1 &
+    longitudinal_iv_sample$ever_self_employed_after_childbirth == 1,
+  na.rm = TRUE
+)
+
+longitudinal_ols <- ols_hc1(
+  ever_self_employed_after_childbirth ~ children_2022 + age_2022_est + educ +
+    mother_educ + father_educ + married_2022 + race,
+  data = longitudinal_iv_sample
+)
+
+longitudinal_iv <- iv_2sls_hc1(
+  y = "ever_self_employed_after_childbirth",
+  x_endog = "children_2022",
+  z_inst = "twin_ever",
+  controls = controls,
+  data = longitudinal_iv_sample
+)
+
+longitudinal_ols_coef <- longitudinal_ols$table$estimate[
+  longitudinal_ols$table$term == "children_2022"
+]
+longitudinal_ols_se <- longitudinal_ols$table$robust_se[
+  longitudinal_ols$table$term == "children_2022"
+]
+longitudinal_iv_coef <- longitudinal_iv$table$estimate[
+  longitudinal_iv$table$term == "children_2022"
+]
+longitudinal_iv_se <- longitudinal_iv$table$robust_se[
+  longitudinal_iv$table$term == "children_2022"
+]
+
+longitudinal_table <- data.frame(
+  Outcome = c(
+    "Self-employed in 2022",
+    "Ever entered self-employment after childbirth"
+  ),
+  `OLS Coef.` = c(
+    sprintf("%.4f", ols_self_emp_coef),
+    sprintf("%.4f", longitudinal_ols_coef)
+  ),
+  `OLS SE` = c(
+    sprintf("%.4f", ols_se[1]),
+    sprintf("%.4f", longitudinal_ols_se)
+  ),
+  `IV Coef.` = c(
+    sprintf("%.4f", iv_self_emp_coef),
+    sprintf("%.4f", longitudinal_iv_coef)
+  ),
+  `IV SE` = c(
+    sprintf("%.4f", iv_se[1]),
+    sprintf("%.4f", longitudinal_iv_se)
+  ),
+  check.names = FALSE
+)
+
+cat("\\begingroup\\small\n")
+print(paper_table(
+  longitudinal_table,
+  caption = NULL,
+  align = c("l", "c", "c", "c", "c")
+))
+cat("\\endgroup\n")
+```
+
+Appendix Table A5 reports an exploratory extension motivated by the panel nature of the NLSY79. The longitudinal outcome equals one if first observed self-employment occurs after first childbirth, excluding women who were already self-employed before first childbirth, excluding same-year ambiguous cases, and using the cleaner post-1979 first-birth sample. The exploratory sample contains `r format(longitudinal_n, big.mark = ",")` women, including `r longitudinal_outcome_count` who entered self-employment after childbirth, `r longitudinal_twin_count` who experienced a twin/triplet birth, and `r longitudinal_twin_outcome_count` who both experienced a twin/triplet birth and entered self-employment after childbirth. The IV estimate for this longitudinal outcome remains statistically insignificant and close to zero, so the qualitative conclusion of the paper remains unchanged. Because the outcome requires additional assumptions regarding timing and sample selection, it is reported as exploratory evidence rather than as a replacement for the main specification.
