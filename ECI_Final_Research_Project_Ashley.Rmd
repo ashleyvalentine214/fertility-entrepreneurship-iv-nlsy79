@@ -769,7 +769,7 @@ paper_table(
 ```
 Notes: Robust HC1 standard errors are reported in parentheses. Statistical significance levels are denoted by *** p < 0.01, ** p < 0.05, and * p < 0.10.
 
-Using the broader entrepreneurship definition produces results that are qualitatively similar to the baseline specification. The estimated fertility coefficient remains positive (`r sprintf("%.3f", iv_family_coef)`) but is not statistically significant (p = `r sprintf("%.3f", iv_family_p)`). The sign and magnitude of the estimate are broadly consistent with the baseline IV results, suggesting that the main conclusions do not materially change under this alternative outcome definition.
+Using the broader entrepreneurship definition produces results that are qualitatively similar to the baseline specification. The estimated effect of fertility on the broader entrepreneurship outcome remains positive (`r sprintf("%.3f", iv_family_coef)`) but is not statistically significant (p = `r sprintf("%.3f", iv_family_p)`). The sign and magnitude of the estimate are broadly consistent with the baseline IV self-employment results, suggesting that the main conclusions do not materially change under this alternative outcome definition.
 
 
 ## 6.2 Education Heterogeneity
@@ -842,7 +842,7 @@ paper_table(
 ```
 Notes: Robust HC1 standard errors are reported in parentheses. Statistical significance levels are denoted by *** p < 0.01, ** p < 0.05, and * p < 0.10.
 
-The education heterogeneity analysis provides suggestive evidence that fertility may affect women differently across educational attainment groups. Among BA+ women, the estimated fertility effect is `r sprintf("%.3f", heterogeneity_est[1])`, whereas the corresponding estimate among non-BA women is `r sprintf("%.3f", heterogeneity_est[2])`.
+The education heterogeneity analysis provides suggestive evidence that fertility may affect women differently across educational attainment groups. Among BA+ women, the estimated effect of fertility on self-employment is `r sprintf("%.3f", heterogeneity_est[1])`, whereas the corresponding self-employment estimate among non-BA women is `r sprintf("%.3f", heterogeneity_est[2])`.
 
 Although neither estimate is statistically significant, the difference in signs is broadly consistent with the hypothesis that the relationship between fertility and self-employment may vary by educational attainment. However, the number of twin births becomes substantially smaller after dividing the sample into education groups, limiting statistical power and resulting in imprecise estimates.
 
